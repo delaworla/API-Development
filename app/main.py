@@ -16,7 +16,6 @@ class Post(BaseModel):
     
 
 
-# request GET method url: "/", order DOES matter
 while True:
 
     try:
@@ -29,7 +28,10 @@ while True:
         print("Connecting to database failed")
         print("Error: ", error)
         time.sleep(2)
+# the cursor_factory is needed to give you the column name and the value in the postgres driver 'Psycopg'
 
+
+# request GET method url: "/", order DOES matter
 @app.get("/")
 async def root():
     return {"message": "Hello World, this is my api"}
@@ -48,7 +50,9 @@ def find_index_post(id):
 
 @app.get("/posts")
 def get_posts():
-    return {"data": my_posts} 
+    cursor.execute(""" SELECT * FROM posts """) 
+    posts =cursor.fetchall()
+    return {"data": posts} 
 
 # payLoad is the variable to store all the body data it is of type dictionary and 
 # it's going to extract all of the fields from Body and convert it into a python dictionary
@@ -100,5 +104,4 @@ def update_post(id: int, post : Post):
     my_posts[index] = post_dict
     print(post)
     return {'message': 'Updated post'}
-
-    
+ 
